@@ -2,9 +2,7 @@ import { Alchemy } from './../../alchemy/entities/alchemy.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import { Collection } from '../../collections/entities/collection.entity';
-import { Nft } from 'src/nfts/entities/nft.entity';
 import { Purchase } from '../../purchases/entities/purchase.entity';
-import { Sale } from '../../sales/entities/sale.entity';
 
 export type UserDocument = User & Document;
 
@@ -77,16 +75,10 @@ export class User {
   collections: Collection[];
 
   @Prop()
-  likes: Nft[];
-
-  @Prop()
   alchemy: Alchemy[];
 
   @Prop()
   purchases: Purchase[];
-
-  @Prop()
-  sales: Sale[];
 
   @Prop()
   followers: User[];

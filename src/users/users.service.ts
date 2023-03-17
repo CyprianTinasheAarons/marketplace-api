@@ -29,6 +29,10 @@ export class UsersService {
     return this.userModel.findOne({ username });
   }
 
+  async findOneByWalletAddress(walletAddress: string) {
+    return this.userModel.findOne({ walletAddress });
+  }
+
   async update(
     id: string,
     updateUserDto: UpdateUserDto,

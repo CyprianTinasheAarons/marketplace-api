@@ -3,6 +3,14 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { HashService } from './hash.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import Moralis from 'moralis';
+
+const config = {
+  domain: 'moralis.io',
+  statement: 'Please sign this message to confirm your identity.',
+  uri: 'https://moralis.io',
+  timeout: 60,
+};
 
 @Injectable()
 export class AuthService {
@@ -15,6 +23,8 @@ export class AuthService {
   async getUserByUsername(username: string) {
     return await this.usersService.findOneByUsername(username);
   }
+
+  //Admin authentication
 
   async login(user: any) {
     const payload = {
@@ -48,7 +58,6 @@ export class AuthService {
   }
 
   async register(createUserDto: CreateUserDto) {
-    console.log('registering user', createUserDto);
     //check if user exists
     const user = await this.usersService.findOneByUsername(
       createUserDto.username,
@@ -75,5 +84,79 @@ export class AuthService {
       return user;
     }
     return null;
+  }
+
+  //Web3 Auth
+  async requestMessage(web3Auth: {
+    address: string;
+    chain: string;
+    network: any;
+  }): Promise<any> {
+    const { address, chain, network } = web3Auth;
+
+    try {
+      const message = await Moralis.Auth.requestMessage({
+        address,
+        chain,
+        network,
+        ...config,
+      });
+
+      return message;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async verify(web3Auth: { message: string; signature: string }): Promise<any> {
+    const { message, signature } = web3Auth;
+
+    try {
+      const { address, profileId } = (
+        await Moralis.Auth.verify({
+          message,
+          signature,
+          networkType: 'evm',
+        })
+      ).raw;
+
+      const user = { address, profileId, signature };
+      const token = this.jwtService.sign(user);
+
+      return { token, user };
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+  async authenticate(request: any): Promise<any> {
+    const token = request.cookies.jwt;
+    if (!token) {
+      return null;
+    }
+
+    try {
+      const data = await this.jwtService.verifyAsync(token);
+      return data;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async registerWeb3User(createUserDto: CreateUserDto) {
+    //check if user exists
+    const user = await this.usersService.findOneByWalletAddress(
+      createUserDto.walletAddress,
+    );
+
+    //if user exists, throw error
+    if (user) {
+      throw new Error('User already exists');
+    }
+
+    //create user
+    return await this.usersService.create(createUserDto);
   }
 }

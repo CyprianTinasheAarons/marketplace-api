@@ -7,16 +7,14 @@ import { UsersModule } from './users/users.module';
 import { CollectionsModule } from './collections/collections.module';
 import { ListingsModule } from './listings/listings.module';
 import { PurchasesModule } from './purchases/purchases.module';
-import { SalesModule } from './sales/sales.module';
-import { NftsModule } from './nfts/nfts.module';
 import { SearchModule } from './search/search.module';
 import { DiscoveryModule } from './discovery/discovery.module';
 import { BidsModule } from './bids/bids.module';
-import { OffersModule } from './offers/offers.module';
-import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { AlchemyModule } from './alchemy/alchemy.module';
 import { StorageModule } from './storage/storage.module';
 import { AuthModule } from './auth/auth.module';
+import { NftModule } from './nft/nft.module';
+import { CategoriesModule } from './categories/categories.module';
 
 const dbConfig = {
   uri: 'mongodb+srv://dbAdmin:WgdwEX8beVvC8MgP@cluster0.h930z.mongodb.net/?retryWrites=true&w=majority',
@@ -35,16 +33,14 @@ const dbConfig = {
     CollectionsModule,
     ListingsModule,
     PurchasesModule,
-    SalesModule,
-    NftsModule,
     SearchModule,
     DiscoveryModule,
     BidsModule,
-    OffersModule,
-    CloudinaryModule,
     AlchemyModule,
     StorageModule,
+    NftModule,
     AuthModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -15,6 +15,7 @@ import { StorageModule } from './storage/storage.module';
 import { AuthModule } from './auth/auth.module';
 import { NftModule } from './nft/nft.module';
 import { CategoriesModule } from './categories/categories.module';
+import { RegistryModule } from './registry/registry.module';
 
 const dbConfig = {
   uri: 'mongodb+srv://dbAdmin:WgdwEX8beVvC8MgP@cluster0.h930z.mongodb.net/?retryWrites=true&w=majority',
@@ -41,6 +42,7 @@ const dbConfig = {
     NftModule,
     AuthModule,
     CategoriesModule,
+    RegistryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

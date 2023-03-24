@@ -1,34 +1,66 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Res,
+  HttpStatus,
+} from '@nestjs/common';
 import { CloudinaryService } from './cloudinary.service';
-import { CreateCloudinaryDto } from './dto/create-cloudinary.dto';
-import { UpdateCloudinaryDto } from './dto/update-cloudinary.dto';
 
 @Controller('cloudinary')
 export class CloudinaryController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
-  @Post()
-  create(@Body() createCloudinaryDto: CreateCloudinaryDto) {
-    return this.cloudinaryService.create(createCloudinaryDto);
+  @Post('upload')
+  async uploadImage(@Res() response, @Body() file: Express.Multer.File) {
+    const result = await this.cloudinaryService.uploadImage(file);
+    return response.status(HttpStatus.OK).json({
+      message: 'Image uploaded successfully',
+      result,
+    });
   }
 
-  @Get()
-  findAll() {
-    return this.cloudinaryService.findAll();
+  @Delete('delete/:publicId')
+  async deleteImage(@Res() response, @Param('publicId') publicId: string) {
+    const result = await this.cloudinaryService.deleteImage(publicId);
+    return response.status(HttpStatus.OK).json({
+      message: 'Image deleted successfully',
+      result,
+    });
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cloudinaryService.findOne(+id);
+  @Patch('update/:publicId')
+  async updateImage(
+    @Res() response,
+    @Param('publicId') publicId: string,
+    @Body() file: Express.Multer.File,
+  ) {
+    const result = await this.cloudinaryService.updateImage(publicId, file);
+    return response.status(HttpStatus.OK).json({
+      message: 'Image updated successfully',
+      result,
+    });
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCloudinaryDto: UpdateCloudinaryDto) {
-    return this.cloudinaryService.update(+id, updateCloudinaryDto);
+  @Get('images')
+  async getImages(@Res() response) {
+    const result = await this.cloudinaryService.getImages();
+    return response.status(HttpStatus.OK).json({
+      message: 'Images fetched successfully',
+      result,
+    });
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cloudinaryService.remove(+id);
+  @Get('image/:publicId')
+  async getImage(@Res() response, @Param('publicId') publicId: string) {
+    const result = await this.cloudinaryService.getImage(publicId);
+    return response.status(HttpStatus.OK).json({
+      message: 'Image fetched successfully',
+      result,
+    });
   }
 }

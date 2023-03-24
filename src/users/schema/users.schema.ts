@@ -1,8 +1,5 @@
-import { Alchemy } from './../../alchemy/entities/alchemy.entity';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-import { Collection } from '../../collections/entities/collection.entity';
-import { Purchase } from '../../purchases/entities/purchase.entity';
 
 export type UserDocument = User & Document;
 
@@ -70,15 +67,6 @@ export class User {
 
   @Prop()
   isSuspended: boolean;
-
-  @Prop()
-  collections: Collection[];
-
-  @Prop()
-  alchemy: Alchemy[];
-
-  @Prop()
-  purchases: Purchase[];
 
   @Prop()
   followers: User[];

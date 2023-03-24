@@ -4,6 +4,6 @@ import { AlchemyController } from './alchemy.controller';
 
 @Module({
   controllers: [AlchemyController],
-  providers: [AlchemyService]
+  providers: [AlchemyService],
 })
 export class AlchemyModule {}

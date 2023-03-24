@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { JwtService } from '@nestjs/jwt';
 import { HashService } from './hash.service';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -18,6 +19,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private hashService: HashService,
+    private notificationsService: NotificationsService,
   ) {}
 
   async getUserByUsername(username: string) {
@@ -75,7 +77,17 @@ export class AuthService {
     );
 
     //create user
-    return await this.usersService.create(createUserDto);
+    await this.usersService.create(createUserDto);
+    await this.notificationsService.sendEmail(
+      createUserDto.email,
+      'Welcome to the Marketplace!',
+      'You are now registered!',
+    );
+
+    return {
+      message: 'User created successfully',
+      user: createUserDto,
+    };
   }
 
   async validateUser(username: string, pass: string): Promise<any> {

@@ -1,26 +1,68 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAlchemyDto } from './dto/create-alchemy.dto';
-import { UpdateAlchemyDto } from './dto/update-alchemy.dto';
+import { Alchemy, fromHex, AssetTransfersCategory } from 'alchemy-sdk';
+import Settings from './alchemy.config';
 
+const alchemy = new Alchemy(Settings);
 @Injectable()
 export class AlchemyService {
-  create(createAlchemyDto: CreateAlchemyDto) {
-    return 'This action adds a new alchemy';
+  //get nfts for user
+  //get nfts for collection
+  //get metadata for nft
+
+  async getUserNfts(address: string): Promise<any> {
+    const nfts = await alchemy.nft.getNftsForOwner(address);
+    return nfts;
   }
 
-  findAll() {
-    return `This action returns all alchemy`;
+  async getCollectionNfts(contractAddress: string): Promise<any> {
+    const nfts = await alchemy.nft.getNftsForContract(contractAddress);
+    return nfts;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} alchemy`;
+  async getNftMetadata(contractAddress: string, tokenId: string): Promise<any> {
+    const metadata = await alchemy.nft.getNftMetadata(contractAddress, tokenId);
+    return metadata;
   }
 
-  update(id: number, updateAlchemyDto: UpdateAlchemyDto) {
-    return `This action updates a #${id} alchemy`;
+  async getCurrentHolders(contractAddress: string): Promise<any> {
+    const owners = await alchemy.nft.getOwnersForContract(contractAddress);
+    return owners;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} alchemy`;
+  //get history
+  async getNftHistory(contractAddress: string, tokenId: number): Promise<any> {
+    const response = await alchemy.core.getAssetTransfers({
+      fromBlock: '0x0',
+      contractAddresses: [contractAddress],
+      category: [
+        AssetTransfersCategory.EXTERNAL,
+        AssetTransfersCategory.INTERNAL,
+        AssetTransfersCategory.ERC20,
+        AssetTransfersCategory.ERC721,
+        AssetTransfersCategory.ERC1155,
+      ],
+      excludeZeroValue: false,
+    });
+    const history = response.transfers.filter((txn) => {
+      fromHex(txn.erc721TokenId) == tokenId;
+    });
+    return history;
+  }
+
+  //get transaction history  for address
+  async getTransactionHistory(address: string): Promise<any> {
+    const response = await alchemy.core.getAssetTransfers({
+      fromBlock: '0x0',
+      fromAddress: address,
+      category: [
+        AssetTransfersCategory.EXTERNAL,
+        AssetTransfersCategory.INTERNAL,
+        AssetTransfersCategory.ERC20,
+        AssetTransfersCategory.ERC721,
+        AssetTransfersCategory.ERC1155,
+      ],
+      excludeZeroValue: false,
+    });
+    return response.transfers;
   }
 }

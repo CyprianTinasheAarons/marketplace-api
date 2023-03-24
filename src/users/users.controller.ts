@@ -12,6 +12,11 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import algoliasearch from 'algoliasearch';
+
+// API keys below contain actual values tied to your Algolia account
+const client = algoliasearch('29HQFPGFIK', '9a6850ccb6630ceaaea7ab33bd310542');
+const index = client.initIndex('your_index_name');
 
 @Controller('users')
 export class UsersController {
@@ -29,6 +34,13 @@ export class UsersController {
   @Get()
   async findAll(@Res() response) {
     const users = await this.usersService.findAll();
+    users.forEach((user) =>
+      index.saveObject({
+        objectID: user._id,
+        username: user.username,
+        walletAddress: user.walletAddress,
+      }),
+    );
     return response.status(HttpStatus.OK).json(users);
   }
 

@@ -43,6 +43,12 @@ export class NftService {
     return nft.save();
   }
 
+  //lazy minting
+  //Create a batch of unique NFTs to be claimed in the future
+  //setting claim phases
+  //delayed reveals
+  //setting royalty fees
+
   async findAll(): Promise<NftDocument[]> {
     const nfts = await this.nftModel.find().exec();
     return nfts;

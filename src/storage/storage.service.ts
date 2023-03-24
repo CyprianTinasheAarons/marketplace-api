@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { CreateStorageDto } from './dto/create-storage.dto';
-import { UpdateStorageDto } from './dto/update-storage.dto';
+import { ThirdwebStorage } from '@thirdweb-dev/storage';
+import { NFTStorage, File } from 'nft.storage';
+import mime from 'mime';
 
+// First, instantiate the SDK
+const storage = new ThirdwebStorage();
+const nftstorage = new NFTStorage({ token: process.env.NFTSTORAGE_API_KEY });
 @Injectable()
 export class StorageService {
-  create(createStorageDto: CreateStorageDto) {
-    return 'This action adds a new storage';
+  //IPFS
+  async ipfsUpload(metadata: any) {
+    return await storage.upload(metadata);
   }
 
-  findAll() {
-    return `This action returns all storage`;
+  async ipfsDownload(uri: string) {
+    return await storage.downloadJSON(uri);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} storage`;
+  // Here we a URL with a gateway that we can look at in the browser
+  async ipfsResolve(uri: string) {
+    return await storage.resolveScheme(uri);
   }
 
-  update(id: number, updateStorageDto: UpdateStorageDto) {
-    return `This action updates a #${id} storage`;
+  //NFT Storage
+  async nftUpload(metadata: any) {
+    const cid = await nftstorage.storeDirectory([
+      new File([JSON.stringify(metadata)], 'metadata.json', {
+        type: 'application/json',
+      }),
+    ]);
+    return cid;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} storage`;
+  //Store image,name, description
+  async nftUploadItem(image: any, name: string, description: string) {
+    const cid = await nftstorage.store({
+      image,
+      name,
+      description,
+    });
+    return cid;
   }
 }

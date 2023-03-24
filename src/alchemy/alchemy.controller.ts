@@ -1,34 +1,67 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Res, HttpStatus } from '@nestjs/common';
 import { AlchemyService } from './alchemy.service';
-import { CreateAlchemyDto } from './dto/create-alchemy.dto';
-import { UpdateAlchemyDto } from './dto/update-alchemy.dto';
 
 @Controller('alchemy')
 export class AlchemyController {
   constructor(private readonly alchemyService: AlchemyService) {}
 
-  @Post()
-  create(@Body() createAlchemyDto: CreateAlchemyDto) {
-    return this.alchemyService.create(createAlchemyDto);
+  @Get('user/:address')
+  async getUserNfts(@Res() response, @Param('address') address: string) {
+    const userNfts = await this.alchemyService.getUserNfts(address);
+    return response.status(HttpStatus.OK).json(userNfts);
   }
 
-  @Get()
-  findAll() {
-    return this.alchemyService.findAll();
+  @Get('collection/:contractAddress')
+  async getCollectionNfts(
+    @Res() response,
+    @Param('contractAddress') contractAddress: string,
+  ) {
+    const collectionNfts = await this.alchemyService.getCollectionNfts(
+      contractAddress,
+    );
+    return response.status(HttpStatus.OK).json(collectionNfts);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.alchemyService.findOne(+id);
+  @Get('metadata/:contractAddress/:tokenId')
+  async getNftMetadata(
+    @Res() response,
+    @Param('contractAddress') contractAddress: string,
+    @Param('tokenId') tokenId: string,
+  ) {
+    const metadata = await this.alchemyService.getNftMetadata(
+      contractAddress,
+      tokenId,
+    );
+    return response.status(HttpStatus.OK).json(metadata);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAlchemyDto: UpdateAlchemyDto) {
-    return this.alchemyService.update(+id, updateAlchemyDto);
+  @Get('holders/:contractAddress')
+  async getNftHolders(
+    @Res() response,
+    @Param('contractAddress') contractAddress: string,
+  ) {
+    const holders = await this.alchemyService.getCurrentHolders(
+      contractAddress,
+    );
+    return response.status(HttpStatus.OK).json(holders);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.alchemyService.remove(+id);
+  @Get('history/:contractAddress/:tokenId')
+  async getNftHistory(
+    @Res() response,
+    @Param('contractAddress') contractAddress: string,
+    @Param('tokenId') tokenId: number,
+  ) {
+    const history = await this.alchemyService.getNftHistory(
+      contractAddress,
+      tokenId,
+    );
+    return response.status(HttpStatus.OK).json(history);
+  }
+
+  @Get('transfers/:address')
+  async getNftTransfers(@Res() response, @Param('address') address: string) {
+    const transfers = await this.alchemyService.getTransactionHistory(address);
+    return response.status(HttpStatus.OK).json(transfers);
   }
 }

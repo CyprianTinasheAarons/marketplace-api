@@ -6,6 +6,7 @@ import { UserSchema } from '../users/schema/users.schema';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { UsersService } from '../users/users.service';
+import { NotificationsService } from '../notifications/notifications.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
@@ -29,6 +30,7 @@ import { HashService } from './hash.service';
     LocalStrategy,
     JwtStrategy,
     HashService,
+    NotificationsService,
   ],
   exports: [AuthService],
 })

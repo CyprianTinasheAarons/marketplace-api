@@ -1,8 +1,5 @@
 import { User } from '../entities/user.entity';
-import { Collection } from '../../collections/entities/collection.entity';
 import { Nft } from '../../nft/entities/nft.entity';
-import { Purchase } from '../../purchases/entities/purchase.entity';
-import { Alchemy } from './../../alchemy/entities/alchemy.entity';
 export class CreateUserDto extends User {
   firstName: string;
 
@@ -46,13 +43,7 @@ export class CreateUserDto extends User {
 
   isSuspended: boolean;
 
-  collections: Collection[];
-
   likes: Nft[];
-
-  alchemy: Alchemy[];
-
-  purchases: Purchase[];
 
   followers: User[];
 

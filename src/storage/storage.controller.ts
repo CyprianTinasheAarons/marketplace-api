@@ -1,34 +1,54 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  HttpStatus,
+  Res,
+} from '@nestjs/common';
 import { StorageService } from './storage.service';
-import { CreateStorageDto } from './dto/create-storage.dto';
-import { UpdateStorageDto } from './dto/update-storage.dto';
 
 @Controller('storage')
 export class StorageController {
   constructor(private readonly storageService: StorageService) {}
 
-  @Post()
-  create(@Body() createStorageDto: CreateStorageDto) {
-    return this.storageService.create(createStorageDto);
+  @Post('ipfs/upload')
+  async ipfsUpload(@Body() metadata: any, @Res() res: any) {
+    const response = await this.storageService.ipfsUpload(metadata);
+    return res.status(HttpStatus.OK).json(response);
   }
 
-  @Get()
-  findAll() {
-    return this.storageService.findAll();
+  @Get('ipfs/download/:uri')
+  async ipfsDownload(@Param('uri') uri: string, @Res() res: any) {
+    const response = await this.storageService.ipfsDownload(uri);
+    return res.status(HttpStatus.OK).json(response);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.storageService.findOne(+id);
+  @Get('ipfs/resolve/:uri')
+  async ipfsResolve(@Param('uri') uri: string, @Res() res: any) {
+    const response = await this.storageService.ipfsResolve(uri);
+    return res.status(HttpStatus.OK).json(response);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStorageDto: UpdateStorageDto) {
-    return this.storageService.update(+id, updateStorageDto);
+  @Post('nftstorage/upload')
+  async nftUpload(@Body() metadata: any, @Res() res: any) {
+    const response = await this.storageService.nftUpload(metadata);
+    return res.status(HttpStatus.OK).json(response);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.storageService.remove(+id);
+  @Post('nftstorage/upload/single')
+  async nftUploadItem(
+    @Body('image') image: any,
+    @Body('name') name: string,
+    @Body('description') description: string,
+    @Res() res: any,
+  ) {
+    const response = await this.storageService.nftUploadItem(
+      image,
+      name,
+      description,
+    );
+    return res.status(HttpStatus.OK).json(response);
   }
 }

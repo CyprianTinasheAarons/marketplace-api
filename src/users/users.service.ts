@@ -42,4 +42,47 @@ export class UsersService {
   async remove(id: string) {
     return this.userModel.findByIdAndRemove(id);
   }
+
+  //implementing logic for followers , following and likes other users / nfts
+  async followUser(userId: string, followerId: string): Promise<UserDocument> {
+    const result = this.userModel.findByIdAndUpdate(
+      userId,
+      { $addToSet: { following: followerId } },
+      { new: true },
+    );
+    return result;
+  }
+
+  async unfollowUser(
+    userId: string,
+    followerId: string,
+  ): Promise<UserDocument> {
+    const result = this.userModel.findByIdAndUpdate(
+      userId,
+      { $pull: { following: followerId } },
+      { new: true },
+    );
+    return result;
+  }
+
+  async likeNft(
+    userId: string,
+    contractAddress: string,
+    nftId: string,
+  ): Promise<UserDocument> {
+    const result = this.userModel.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: {
+          likedNfts: {
+            contractAddress,
+            nftId,
+          },
+        },
+      },
+      { new: true },
+    );
+
+    return result;
+  }
 }

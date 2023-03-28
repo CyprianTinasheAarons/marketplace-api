@@ -45,6 +45,9 @@ export class Nft {
   url: string;
 
   @Prop()
+  qrcode: string;
+
+  @Prop()
   blockchain: string;
 
   @Prop()

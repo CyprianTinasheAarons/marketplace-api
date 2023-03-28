@@ -22,8 +22,9 @@ export class AuthService {
     private notificationsService: NotificationsService,
   ) {}
 
-  async getUserByUsername(username: string) {
-    return await this.usersService.findOneByUsername(username);
+  async getProfile(userId: string) {
+    const user = await this.usersService.findOne(userId);
+    return user;
   }
 
   //Admin authentication

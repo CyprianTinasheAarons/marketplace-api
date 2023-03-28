@@ -12,13 +12,40 @@ import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+        },
+        password: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Login successful',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid username or password',
+  })
   async login(@Res() response, @Body() body: any) {
     const user = await this.authService.login(body);
     if (!user) {
@@ -29,6 +56,28 @@ export class AuthController {
   }
 
   @Post('register')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        username: {
+          type: 'string',
+        },
+        password: {
+          type: 'string',
+        },
+        email: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'User registered successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Error registering user',
+  })
   async register(@Res() response, @Body() createUserDto: CreateUserDto) {
     const newUser = await this.authService.register(createUserDto);
     if (!newUser) {
@@ -39,13 +88,55 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  @Get('profile')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        userId: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'User profile',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Error getting profile',
+  })
+  async getProfile(@Request() req, @Res() response) {
+    const user = await this.authService.getProfile(req.userId);
+    if (!user) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        message: 'Error getting profile',
+      });
+    }
   }
 
   //Web3
   @Post('/web3/requestmessage')
+  @ApiBearerAuth()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        address: {
+          type: 'string',
+        },
+        chain: {
+          type: 'string',
+        },
+        network: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Message requested',
+  })
   async requestMessage(@Res() response, @Body() body: any) {
     const message = await this.authService.requestMessage(body);
     if (!message) {
@@ -61,6 +152,23 @@ export class AuthController {
   }
 
   @Post('/web3/verify')
+  @ApiBearerAuth()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+        },
+        signature: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'User verified',
+  })
   async verify(@Res() response, @Body() body: any) {
     const { token, user } = await this.authService.verify(body);
     if (!user) {
@@ -80,6 +188,23 @@ export class AuthController {
   }
 
   @Post('/web3/signup')
+  @ApiBearerAuth()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        walletAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'User signed up',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Error signing up user',
+  })
   async signup(@Res() response, @Body() body: any) {
     const user = await this.authService.registerWeb3User(body);
     if (!user) {
@@ -95,6 +220,13 @@ export class AuthController {
   }
 
   @Get('/web3/authenticate')
+  @ApiBearerAuth()
+  @ApiOkResponse({
+    description: 'User authenticated',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Error authenticating user',
+  })
   async authenticate(@Res() response, @Request() req) {
     const data = await this.authService.authenticate(req);
     if (!data) {

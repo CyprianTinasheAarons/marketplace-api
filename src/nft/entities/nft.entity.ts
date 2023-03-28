@@ -12,6 +12,7 @@ export class Nft {
   isBanned: boolean;
   isSuspended: boolean;
   url: string;
+  qrcode: string;
   blockchain: string;
   contractAddress: string;
 }

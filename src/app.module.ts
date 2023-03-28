@@ -13,6 +13,7 @@ import { RegistryModule } from './registry/registry.module';
 import { MarketplaceModule } from './marketplace/marketplace.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { BlockchainsModule } from './blockchains/blockchains.module';
+import { StableDiffusionModule } from './stable-diffusion/stable-diffusion.module';
 
 const dbConfig = {
   uri: 'mongodb+srv://dbAdmin:WgdwEX8beVvC8MgP@cluster0.h930z.mongodb.net/?retryWrites=true&w=majority',
@@ -37,6 +38,7 @@ const dbConfig = {
     MarketplaceModule,
     NotificationsModule,
     BlockchainsModule,
+    StableDiffusionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

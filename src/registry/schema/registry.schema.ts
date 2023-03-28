@@ -10,6 +10,7 @@ export class Registry {
 
   @Prop()
   lastName: string;
+
   @Prop()
   walletAddress: string;
 

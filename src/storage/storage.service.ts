@@ -19,7 +19,7 @@ export class StorageService {
 
   // Here we a URL with a gateway that we can look at in the browser
   async ipfsResolve(uri: string) {
-    return await storage.resolveScheme(uri);
+    return storage.resolveScheme(uri);
   }
 
   //NFT Storage

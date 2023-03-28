@@ -43,11 +43,9 @@ export class CreateUserDto extends User {
 
   isSuspended: boolean;
 
-  likes: Nft[];
-
-  followers: User[];
-
   following: User[];
+
+  likedNfts: [];
 
   createdAt: Date;
 

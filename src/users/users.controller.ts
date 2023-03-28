@@ -16,7 +16,7 @@ import algoliasearch from 'algoliasearch';
 
 // API keys below contain actual values tied to your Algolia account
 const client = algoliasearch('29HQFPGFIK', '9a6850ccb6630ceaaea7ab33bd310542');
-const index = client.initIndex('your_index_name');
+const index = client.initIndex('marketplace');
 
 @Controller('users')
 export class UsersController {
@@ -84,6 +84,61 @@ export class UsersController {
     return response.status(HttpStatus.OK).json({
       message: 'User deleted successfully',
       user: deletedUser,
+    });
+  }
+
+  @Post(':id/follow')
+  async followUser(
+    @Res() response,
+    @Param('id') id: string,
+    @Body('followerId') followerId: string,
+  ) {
+    const user = await this.usersService.followUser(id, followerId);
+    if (!user) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+    return response.status(HttpStatus.OK).json({
+      message: 'User followed successfully',
+      user,
+    });
+  }
+
+  @Post(':id/unfollow')
+  async unfollowUser(
+    @Res() response,
+    @Param('id') id: string,
+    @Body('followerId') followerId: string,
+  ) {
+    const user = await this.usersService.unfollowUser(id, followerId);
+    if (!user) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+    return response.status(HttpStatus.OK).json({
+      message: 'User unfollowed successfully',
+      user,
+    });
+  }
+
+  @Post(':id/like')
+  async likeNft(
+    @Res() response,
+    @Param('id') id: string,
+    @Body('contractAddress') contractAddress: string,
+    @Body('nftId') nftId: string,
+  ) {
+    const user = await this.usersService.likeNft(id, contractAddress, nftId);
+    if (!user) {
+      return response.status(HttpStatus.NOT_FOUND).json({
+        message: 'User not found',
+      });
+    }
+    return response.status(HttpStatus.OK).json({
+      message: 'NFT liked successfully',
+      user,
     });
   }
 }

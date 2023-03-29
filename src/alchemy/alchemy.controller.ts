@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Res, HttpStatus } from '@nestjs/common';
 import { AlchemyService } from './alchemy.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Alchemy')
 @Controller('alchemy')
 export class AlchemyController {
   constructor(private readonly alchemyService: AlchemyService) {}

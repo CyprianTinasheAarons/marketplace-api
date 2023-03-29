@@ -12,12 +12,37 @@ import {
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Post()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+        image: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({ description: 'Category created' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async create(@Body() createCategoryDto: CreateCategoryDto, @Res() res) {
     const category = await this.categoriesService.create(createCategoryDto);
     return res.status(HttpStatus.CREATED).json(category);
@@ -36,6 +61,24 @@ export class CategoriesController {
   }
 
   @Put(':id')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
+        description: {
+          type: 'string',
+        },
+        image: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({ description: 'Category updated' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,

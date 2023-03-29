@@ -20,7 +20,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
-@Controller('auth')
+@Controller('Auth')
 @ApiTags('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -31,7 +31,7 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        username: {
+        email: {
           type: 'string',
         },
         password: {
@@ -60,13 +60,10 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        username: {
+        email: {
           type: 'string',
         },
         password: {
-          type: 'string',
-        },
-        email: {
           type: 'string',
         },
       },

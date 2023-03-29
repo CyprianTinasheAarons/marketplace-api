@@ -8,12 +8,40 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { MarketplaceService } from './marketplace.service';
-
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+@ApiTags('Marketplace')
 @Controller('marketplace')
 export class MarketplaceController {
   constructor(private readonly marketplaceService: MarketplaceService) {}
 
   @Post('buyoutListing')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        listingId: {
+          type: 'string',
+        },
+        quantity: {
+          type: 'number',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Buyout listing',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async buyoutListing(
     @Res() response,
     @Body('listingId') listingId: string,
@@ -29,6 +57,37 @@ export class MarketplaceController {
   }
 
   @Post('buyListing')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        listingId: {
+          type: 'string',
+        },
+        buyForAddress: {
+          type: 'string',
+        },
+        quantity: {
+          type: 'number',
+        },
+        currencyContractAddress: {
+          type: 'string',
+        },
+        totalPrice: {
+          type: 'number',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Buy listing',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async buyListing(
     @Res() response,
     @Body('listingId') listingId: string,
@@ -97,6 +156,31 @@ export class MarketplaceController {
   }
 
   @Post('makeOffer')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        listingId: {
+          type: 'string',
+        },
+        price: {
+          type: 'number',
+        },
+        quantity: {
+          type: 'number',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Make offer',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async makeOffer(
     @Res() response,
     @Body('listingId') listingId: string,
@@ -115,6 +199,34 @@ export class MarketplaceController {
   }
 
   @Post('acceptOffer')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        listingId: {
+          type: 'string',
+        },
+        offerorAddress: {
+          type: 'string',
+        },
+        currenyContractAddress: {
+          type: 'string',
+        },
+        pricePerToken: {
+          type: 'number',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Accept offer',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async acceptOffer(
     @Res() response,
     @Body('listingId') listingId: string,
@@ -135,6 +247,46 @@ export class MarketplaceController {
   }
 
   @Post('createAuction')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        tokenAddress: {
+          type: 'string',
+        },
+        tokenId: {
+          type: 'string',
+        },
+        startTimestamp: {
+          type: 'string',
+        },
+        listingDuration: {
+          type: 'number',
+        },
+        quantity: {
+          type: 'number',
+        },
+        currencyContractAddress: {
+          type: 'string',
+        },
+        buyoutPrice: {
+          type: 'string',
+        },
+        reservePrice: {
+          type: 'string',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Create auction',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async createAuction(
     @Res() response,
     @Body('tokenAddress') tokenAddress: string,
@@ -163,6 +315,46 @@ export class MarketplaceController {
   }
 
   @Post('createDirectListing')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        tokenAddress: {
+          type: 'string',
+        },
+        tokenId: {
+          type: 'string',
+        },
+        startTimestamp: {
+          type: 'string',
+        },
+        listingDuration: {
+          type: 'number',
+        },
+        quantity: {
+          type: 'number',
+        },
+        currencyContractAddress: {
+          type: 'string',
+        },
+        buyoutPrice: {
+          type: 'string',
+        },
+        reservePrice: {
+          type: 'string',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Create direct listing',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async createDirectListing(
     @Res() response,
     @Body('tokenAddress') tokenAddress: string,
@@ -191,6 +383,25 @@ export class MarketplaceController {
   }
 
   @Post('cancelDirectListing')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        listingId: {
+          type: 'string',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Cancel direct listing',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async cancelDirectListing(
     @Res() response,
     @Body('listingId') listingId: string,
@@ -205,6 +416,28 @@ export class MarketplaceController {
   }
 
   @Post('cancelAuction')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        listingId: {
+          type: 'string',
+        },
+        closeForAddress: {
+          type: 'string',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Cancel auction',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async cancelAuction(
     @Res() response,
     @Body('listingId') listingId: string,
@@ -221,6 +454,43 @@ export class MarketplaceController {
   }
 
   @Post('updateListing')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        listingId: {
+          type: 'string',
+        },
+        quantity: {
+          type: 'number',
+        },
+        reservePrice: {
+          type: 'number',
+        },
+        buyoutPrice: {
+          type: 'number',
+        },
+        currenyToAccept: {
+          type: 'string',
+        },
+        startTimestamp: {
+          type: 'string',
+        },
+        listingDuration: {
+          type: 'number',
+        },
+        contractAddress: {
+          type: 'string',
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Update listing',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+  })
   async updateListing(
     @Res() response,
     @Body('listingId') listingId: string,

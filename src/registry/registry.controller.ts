@@ -5,19 +5,97 @@ import {
   Body,
   Put,
   Param,
-  Delete,
   Res,
+  Delete,
   HttpStatus,
 } from '@nestjs/common';
 import { RegistryService } from './registry.service';
 import { CreateRegistryDto } from './dto/create-registry.dto';
 import { UpdateRegistryDto } from './dto/update-registry.dto';
+import {
+  ApiBody,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
+@ApiTags('Registry')
 @Controller('registry')
 export class RegistryController {
   constructor(private readonly registryService: RegistryService) {}
 
   @Post()
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        firstName: {
+          type: 'string',
+          example: 'John',
+        },
+        lastName: {
+          type: 'string',
+          example: 'Doe',
+        },
+        walletAddress: {
+          type: 'string',
+          example: '0xc0ffee254729296a45a3885639AC7E10F9d54979',
+        },
+        websiteUrl: {
+          type: 'string',
+          example: 'https://example.com',
+        },
+        twitterUrl: {
+          type: 'string',
+          example: 'https://twitter.com/johndoe',
+        },
+        instagramUrl: {
+          type: 'string',
+          example: 'https://instagram.com/johndoe',
+        },
+        otherURL: {
+          type: 'string',
+          example: 'https://linkedin.com/in/johndoe',
+        },
+        artistName: {
+          type: 'string',
+          example: 'John Doe',
+        },
+        artwork: {
+          type: 'array',
+          items: {
+            type: 'string',
+            example: 'Artwork1',
+          },
+        },
+        acknowledgement: {
+          type: 'boolean',
+          example: true,
+        },
+        acknowledgement2: {
+          type: 'boolean',
+          example: true,
+        },
+        acknowledgement3: {
+          type: 'boolean',
+          example: false,
+        },
+        prompts: {
+          type: 'array',
+          items: {
+            type: 'string',
+            example: 'Prompt1',
+          },
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Registry created successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Error creating registry',
+  })
   async create(@Res() response, @Body() createRegistryDto: CreateRegistryDto) {
     try {
       const newRegistry = await this.registryService.create(createRegistryDto);
@@ -62,6 +140,77 @@ export class RegistryController {
   }
 
   @Put(':id')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        firstName: {
+          type: 'string',
+          example: 'John',
+        },
+        lastName: {
+          type: 'string',
+          example: 'Doe',
+        },
+        walletAddress: {
+          type: 'string',
+          example: '0xc0ffee254729296a45a3885639AC7E10F9d54979',
+        },
+        websiteUrl: {
+          type: 'string',
+          example: 'https://example.com',
+        },
+        twitterUrl: {
+          type: 'string',
+          example: 'https://twitter.com/johndoe',
+        },
+        instagramUrl: {
+          type: 'string',
+          example: 'https://instagram.com/johndoe',
+        },
+        otherURL: {
+          type: 'string',
+          example: 'https://linkedin.com/in/johndoe',
+        },
+        artistName: {
+          type: 'string',
+          example: 'John Doe',
+        },
+        artwork: {
+          type: 'array',
+          items: {
+            type: 'string',
+            example: 'Artwork1',
+          },
+        },
+        acknowledgement: {
+          type: 'boolean',
+          example: true,
+        },
+        acknowledgement2: {
+          type: 'boolean',
+          example: true,
+        },
+        acknowledgement3: {
+          type: 'boolean',
+          example: false,
+        },
+        prompts: {
+          type: 'array',
+          items: {
+            type: 'string',
+            example: 'Prompt1',
+          },
+        },
+      },
+    },
+  })
+  @ApiOkResponse({
+    description: 'Registry updated successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Error updating registry',
+  })
   async update(
     @Res() response,
     @Param('id') id: string,

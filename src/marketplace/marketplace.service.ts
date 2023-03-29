@@ -69,8 +69,8 @@ export class MarketplaceService {
 
   //get a listing by id
   async getListingById(
-    listingId: string,
     contractAddress: string,
+    listingId: string,
   ): Promise<any> {
     const contract = await sdk.getContract(contractAddress, 'marketplace');
 
@@ -81,8 +81,8 @@ export class MarketplaceService {
 
   //get all the offers for a listing
   async getOffersForListing(
-    listingId: string,
     contractAddress: string,
+    listingId: string,
   ): Promise<any> {
     const contract = await sdk.getContract(contractAddress, 'marketplace');
 

@@ -5,6 +5,7 @@ import Moralis from 'moralis';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   const config = new DocumentBuilder()
     .setTitle('Marketplace Api')
     .setDescription('Marketplace Api Description')

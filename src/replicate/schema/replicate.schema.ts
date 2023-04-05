@@ -6,23 +6,31 @@ export type ReplicateDocument = Replicate & Document;
 
 @Schema()
 export class Replicate {
-  @ApiProperty()
+  @ApiProperty({ example: 'Create an AI-generated artwork' })
   @Prop()
   prompt: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'user123' })
   @Prop()
   userId: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: ['artist1', 'artist2', 'artist3'] })
   @Prop()
   artists: string[];
 
-  @ApiProperty()
+  @ApiProperty({
+    example: '2022-02-01T00:12:34Z',
+    type: 'string',
+    format: 'date-time',
+  })
   @Prop()
   createdAt: Date;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: '2022-02-01T05:12:34Z',
+    type: 'string',
+    format: 'date-time',
+  })
   @Prop()
   updatedAt: Date;
 }

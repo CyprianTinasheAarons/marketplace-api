@@ -36,7 +36,7 @@ export class AuthService {
       sub: user.userId,
     };
     //check if user exists
-    const userData = await this.usersService.findOneByUsername(user.username);
+    const userData = await this.usersService.findOneByEmail(user.username);
 
     //if user does not exist, throw error
     if (!userData) {
@@ -62,9 +62,7 @@ export class AuthService {
 
   async register(createUserDto: CreateUserDto) {
     //check if user exists
-    const user = await this.usersService.findOneByUsername(
-      createUserDto.username,
-    );
+    const user = await this.usersService.findOneByEmail(createUserDto.email);
 
     //if user exists, throw error
     if (user) {
@@ -92,7 +90,7 @@ export class AuthService {
   }
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOneByUsername(username);
+    const user = await this.usersService.findOneByEmail(username);
     if (user && (await this.hashService.comparePassword(pass, user.password))) {
       return user;
     }
